@@ -1,0 +1,14 @@
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/bin/Debug/net10.0/TugasPBO
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/bin/Debug/net10.0/TugasPBO.deps.json
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/bin/Debug/net10.0/TugasPBO.runtimeconfig.json
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/bin/Debug/net10.0/TugasPBO.dll
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/bin/Debug/net10.0/TugasPBO.pdb
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.GeneratedMSBuildEditorConfig.editorconfig
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.AssemblyInfoInputs.cache
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.AssemblyInfo.cs
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.csproj.CoreCompileInputs.cache
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.dll
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/refint/TugasPBO.dll
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.pdb
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/TugasPBO.genruntimeconfig.cache
+/home/moonlight/Kodingan Perkuliahan/TugasPBO/obj/Debug/net10.0/ref/TugasPBO.dll

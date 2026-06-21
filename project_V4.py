@@ -8,7 +8,7 @@ kapasitas_max = 7
 
 
 
-class Penumpang:
+class penumpang:
     def __init__(self, nama, asal, tujuan):
         self.nama = nama
         self.asal = asal
@@ -17,12 +17,12 @@ class Penumpang:
 
 
 
-class Lift:
+class lift:
     def __init__(self):
         self.lantai_sekarang = 1  # Mulai dari lantai 8 sesuai skenario pembuktian
         self.arah = "idle"        # naik, turun, atau idle
         self.penumpang_dalam = []
-        
+
         # Menampung panggilan dari luar koridor gedung
         # Format: { lantai: {"naik": [list_penumpang], "turun": [list_penumpang]} }
         self.panggilan_luar = {i: {"naik": [], "turun": []} for i in range(lantai_min, lantai_max + 1)}
@@ -46,7 +46,7 @@ class Lift:
         for lantai in self.panggilan_luar:
             if self.panggilan_luar[lantai]["naik"] or self.panggilan_luar[lantai]["turun"]:
                 panggilan_floors.append(lantai)
-        
+
         if not panggilan_floors:
             self.arah = "idle"
             return
@@ -68,16 +68,15 @@ class Lift:
 
 
     def tampilkan_status_lengkap(self):
-        print("\n  ╔═══════════════════════════════════════════╗")
-        print("  ║      STATUS LIFT & ANTREAN (V3 SCAN)      ║")
-        print("  ╠═══════════════════════════════════════════╣")
-        print(f"  ║  📍 Posisi Saat Ini : Lantai {self.lantai_sekarang:<13}║")
-        print(f"  ║  🧭 Arah Gerak      : {self.arah:<13}║")
-        
+        print("        STATUS LIFT & ANTREAN (V3 SCAN)      ")
+        print("  ===========================================\n")
+        print(f"     Posisi Saat Ini : Lantai {self.lantai_sekarang:<13} ")
+        print(f"     Arah Gerak      : {self.arah:<13} ")
+
         jml_org = len(self.penumpang_dalam)
         pad = max(0, 9 - len(str(jml_org)))
-        print(f"  ║  👥 Isi Lift        : {jml_org}/{kapasitas_max} Orang{' ' * pad}║")
-        print("  ╚═══════════════════════════════════════════╝")
+        print(f"    Isi Lift        : {jml_org}/{kapasitas_max} Orang{' ' * pad} ")
+        print("  ===========================================\n")
 
         print("  ┌── Penumpang di dalam lift ──────────────┐")
         if not self.penumpang_dalam:
@@ -106,7 +105,7 @@ class Lift:
                     if len(teks_turun) > 26:
                         teks_turun = teks_turun[:23] + "..."
                     print(f"  │     [TURUN] {teks_turun:<26}│")
-        
+
         if not ada_antrean:
             print("  │  (Tidak ada antrean)                    │")
         print("  └─────────────────────────────────────────┘\n")
@@ -127,7 +126,11 @@ class Lift:
             for f in range(self.lantai_sekarang + 1, lantai_max + 1):
                 if self.panggilan_luar[f]["naik"] or self.panggilan_luar[f]["turun"]:
                     ada_tugas_di_atas = True
-            
+
+            # BUG FIX: Cek penumpang di lantai SEKARANG yang mau NAIK
+            if self.panggilan_luar[self.lantai_sekarang]["naik"]:
+                ada_tugas_di_atas = True
+
             # Jika di atas benar-benar bersih, cek apakah ada sisa tugas di bawah
             if not ada_tugas_di_atas:
                 ada_tugas_di_bawah_atau_sini = False
@@ -136,7 +139,7 @@ class Lift:
                 for f in range(lantai_min, self.lantai_sekarang):
                     if self.panggilan_luar[f]["naik"] or self.panggilan_luar[f]["turun"]:
                         ada_tugas_di_bawah_atau_sini = True
-                
+
                 self.arah = "turun" if ada_tugas_di_bawah_atau_sini else "idle"
 
         elif self.arah == "turun":
@@ -150,7 +153,11 @@ class Lift:
             for f in range(lantai_min, self.lantai_sekarang):
                 if self.panggilan_luar[f]["naik"] or self.panggilan_luar[f]["turun"]:
                     ada_tugas_di_bawah = True
-            
+
+            # [BUG FIX]: Cek penumpang di lantai SEKARANG yang mau TURUN
+            if self.panggilan_luar[self.lantai_sekarang]["turun"]:
+                ada_tugas_di_bawah = True
+
             # Jika di bawah bersih, cek apakah ada sisa tugas di atas
             if not ada_tugas_di_bawah:
                 ada_tugas_di_atas_atau_sini = False
@@ -159,7 +166,7 @@ class Lift:
                 for f in range(self.lantai_sekarang + 1, lantai_max + 1):
                     if self.panggilan_luar[f]["naik"] or self.panggilan_luar[f]["turun"]:
                         ada_tugas_di_atas_atau_sini = True
-                
+
                 self.arah = "naik" if ada_tugas_di_atas_atau_sini else "idle"
 
     def jalankan_simulasi(self):
@@ -194,13 +201,13 @@ class Lift:
                 antrean_di_lantai = self.panggilan_luar[self.lantai_sekarang][self.arah]
                 if antrean_di_lantai:
                     pintu_terbuka = True
-                    
+
                     # Angkut semua orang di antrean lantai ini ke dalam satu sesi sampai penuh
                     while antrean_di_lantai and len(self.penumpang_dalam) < kapasitas_max:
                         p = antrean_di_lantai.pop(0)
                         self.penumpang_dalam.append(p)
                         penumpang_masuk.append(p)
-                    
+
                     # Jika lift penuh tapi di luar masih tersisa orang
                     if antrean_di_lantai and len(self.penumpang_dalam) == kapasitas_max:
                         print(f"     Lift penuh! Sisa penumpang di Lantai {self.lantai_sekarang} harus antre di sesi berikutnya.")
@@ -209,7 +216,7 @@ class Lift:
             print(f"\n ─── [ Lantai {self.lantai_sekarang} ] ────────────────────────────────────────")
             print(f"  Status Arah  : {self.arah}")
             print(f"  Kapasitas    : {len(self.penumpang_dalam)}/{kapasitas_max} Orang")
-            
+
             if pintu_terbuka:
                 print("Pintu Terbuka...")
                 if penumpang_keluar:
@@ -245,11 +252,11 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
-    lift = Lift()
-    
+    mesin_lift = lift()
+
     while True:
         print("====== simulasi lift priority queue (scan) ======")
-        print(f" Posisi Lift Saat Ini: Lantai {lift.lantai_sekarang} ({lift.arah})")
+        print(f" Posisi Lift Saat Ini: Lantai {mesin_lift.lantai_sekarang} ({mesin_lift.arah})")
         print("=================================================")
         print(" 1. Tambah Penumpang (Input Manual)")
         print(" 2. Jalankan Simulasi")
@@ -258,22 +265,22 @@ def main():
         print(" 5. Demo Otomatis Skenario Kasus Panas")
         print(" 0. Keluar")
         print("=================================================")
-        
+
         pilihan = input("Pilih menu ▶ ").strip()
-        
+
         if pilihan == "1":
             print("\n── input antrian luar lift ──")
             nama = input("Masukkan Nama Penumpang: ").strip()
             if not nama:
                 print("Nama tidak boleh kosong!\n")
                 continue
-                
+
             try:
                 asal = int(input(f"Lantai Asal ({lantai_min}-{lantai_max}): "))
                 if asal < lantai_min or asal > lantai_max:
                     print(f"Lantai harus antara {lantai_min} sampai {lantai_max}!\n")
                     continue
-                
+
                 # Pengkondisian tombol lorong adaptif
                 if asal == lantai_min:
                     print("Tombol otomatis diatur ke: naik (Lantai paling bawah)")
@@ -286,12 +293,12 @@ def main():
                     print(" 1. naik")
                     print(" 2. turun")
                     arah_pilihan = input("Pilihan Arah: ").strip()
-                
+
                 tujuan = int(input(f"Masukkan Lantai Tujuan ({lantai_min}-{lantai_max}): "))
                 if tujuan < lantai_min or tujuan > lantai_max:
                     print("Lantai tujuan tidak valid!\n")
                     continue
-                
+
                 # Validasi keselarasan tombol luar dengan lantai tujuan
                 if arah_pilihan == "1" and tujuan <= asal:
                     print(" Error: Tombol naik dipilih, lantai tujuan harus lebih tinggi dari lantai asal!\n")
@@ -299,50 +306,50 @@ def main():
                 elif arah_pilihan == "2" and tujuan >= asal:
                     print(" Error: Tombol turun dipilih, lantai tujuan harus lebih rendah dari lantai asal!\n")
                     continue
-                
-                p = Penumpang(nama, asal, tujuan)
-                lift.tambah_panggilan(p)
+
+                p = penumpang(nama, asal, tujuan)
+                mesin_lift.tambah_panggilan(p)
                 print(f"  Berhasil mendaftarkan {nama} di antrean luar Lantai {asal}!\n")
-                
+
             except ValueError:
                 print("  Input harus berupa angka valid!\n")
 
         elif pilihan == "2":
-            lift.jalankan_simulasi()
+            mesin_lift.jalankan_simulasi()
             input("\nTekan Enter untuk kembali ke menu utama...")
             clear_screen()
 
         elif pilihan == "3":
-            lift.tampilkan_status_lengkap()
+            mesin_lift.tampilkan_status_lengkap()
             input("Tekan Enter untuk kembali ke menu utama...")
             clear_screen()
 
         elif pilihan == "4":
-            lift = Lift()
+            mesin_lift = lift()
             print("\n  Sistem lift berhasil direset ke kondisi awal (Lantai 1, idle).\n")
 
         elif pilihan == "5":
             print("\n  Mengonfigurasi Skenario Kasus...")
-            lift = Lift() # Reset ke kondisi awal
-            lift.lantai_sekarang = 1 # Lift standby di lantai 1
-            
+            mesin_lift = lift() # Reset ke kondisi awal
+            mesin_lift.lantai_sekarang = 1 # Lift standby di lantai 1
+
             # Skenario Kasus:
             # Lantai 8: Dava & Reza mau ke Lantai 6 (Tombol turun) -> Harus Masuk 1 Sesi
-            lift.tambah_panggilan(Penumpang("Dava", 8, 6))
-            lift.tambah_panggilan(Penumpang("Reza", 8, 6))
-            
+            mesin_lift.tambah_panggilan(penumpang("Dava", 8, 6))
+            mesin_lift.tambah_panggilan(penumpang("Reza", 8, 6))
+
             # Lantai 7: Qoiq & Bojes mau ke Lantai 6 (Tombol turun)
-            lift.tambah_panggilan(Penumpang("Qoiq", 7, 6))
-            lift.tambah_panggilan(Penumpang("Bojes", 7, 6))
-            
+            mesin_lift.tambah_panggilan(penumpang("Qoiq", 7, 6))
+            mesin_lift.tambah_panggilan(penumpang("Bojes", 7, 6))
+
             print(" [Kondisi Skenario]:")
             print("   - Lift berada di Lantai 1")
             print("   - Lantai 8: Dava & Reza (Mencet turun ke Lantai 6)")
             print("   - Lantai 7: Qoiq & Bojes (Mencet turun ke Lantai 6)")
             print(" [Ekspektasi Algoritma]: Lift meluncur naik melewati lantai 7 tanpa mengambil Qoiq & Bojes dulu, langsung mentok ke lantai 8, lalu balik arah turun menyapu semua penumpang ke lantai 6.")
-            
+
             input("\nTekan Enter untuk membuktikannya...")
-            lift.jalankan_simulasi()
+            mesin_lift.jalankan_simulasi()
             input("\nTekan Enter untuk kembali ke menu utama...")
             clear_screen()
 
